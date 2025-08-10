@@ -253,6 +253,7 @@ class QuizManager {
     if (this.currentQuestion < quizData.length) {
       this.timeLeft = 30;
       this.hintShown = false;
+      this.updateProgress();
       this.showQuestion();
       this.startTimer();
     } else {
