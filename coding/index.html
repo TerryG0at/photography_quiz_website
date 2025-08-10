@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photography Quiz - Master the Exposure Triangle</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="quiz-header">
+      <div class="header-content">
+        <h1><i class="fas fa-camera"></i> Photography Quiz</h1>
+        <p>Master the Exposure Triangle</p>
+      </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="progress-text">
+        <span id="current-question">1</span> / <span id="total-questions">4</span>
+      </div>
+    </div>
+
+    <!-- Timer -->
+    <div class="timer-container">
+      <div class="timer" id="timer">
+        <i class="fas fa-clock"></i>
+        <span id="time-left">30</span>s
+      </div>
+    </div>
+
+    <!-- Main Quiz Container -->
+    <div class="quiz-container" id="quiz-container">
+      <div id="question-container">
+        <!-- Question content will be injected here -->
+      </div>
+      
+      <div id="controls">
+        <div id="hint-area">
+          <button id="hint-button" class="hint-btn">
+            <i class="fas fa-lightbulb"></i>
+            <span>Hint</span>
+          </button>
+          <img id="hint-logo" src="images/hint-logo.jpeg" alt="Hint Logo" style="display: none;">
+        </div>                  
+        <button id="next-button" class="next-btn">
+          <span>Next Question</span>
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Score Display -->
+    <div class="score-display" id="score-display">
+      <div class="score-circle">
+        <span id="current-score">0</span>
+      </div>
+    </div>
+
+    <!-- Welcome Screen -->
+    <div class="welcome-screen" id="welcome-screen">
+      <div class="welcome-content">
+        <div class="welcome-icon">
+          <i class="fas fa-camera-retro"></i>
+        </div>
+        <h2>Welcome to the Photography Quiz!</h2>
+        <p>Test your knowledge of the exposure triangle and photography fundamentals.</p>
+        
+        <div class="quiz-stats">
+          <div class="stat">
+            <i class="fas fa-question-circle"></i>
+            <span>4 Questions</span>
+          </div>
+          <div class="stat">
+            <i class="fas fa-clock"></i>
+            <span>30s per question</span>
+          </div>
+          <div class="stat">
+            <i class="fas fa-trophy"></i>
+            <span>High Score: <span id="high-score">0</span></span>
+          </div>
+        </div>
+
+        <button id="start-quiz" class="start-btn">
+          <span>Start Quiz</span>
+          <i class="fas fa-play"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div class="results-screen" id="results-screen" style="display: none;">
+      <div class="results-content">
+        <div class="results-header">
+          <div class="results-icon">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <h2>Quiz Completed!</h2>
+        </div>
+        
+        <div class="score-summary">
+          <div class="final-score">
+            <span id="final-score">0</span>
+            <span class="score-label">/ 4</span>
+          </div>
+          <div class="score-percentage">
+            <span id="score-percentage">0%</span>
+          </div>
+        </div>
+
+        <div class="performance-details">
+          <div class="detail-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Correct: <span id="correct-answers">0</span></span>
+          </div>
+          <div class="detail-item">
+            <i class="fas fa-times-circle"></i>
+            <span>Incorrect: <span id="incorrect-answers">0</span></span>
+          </div>
+          <div class="detail-item">
+            <i class="fas fa-stopwatch"></i>
+            <span>Time: <span id="total-time">0s</span></span>
+          </div>
+        </div>
+
+        <div class="feedback-message" id="feedback-message">
+          <!-- Dynamic feedback based on score -->
+        </div>
+
+        <div class="action-buttons">
+          <button id="restart-quiz" class="restart-btn">
+            <i class="fas fa-redo"></i>
+            <span>Try Again</span>
+          </button>
+          <button id="review-answers" class="review-btn">
+            <i class="fas fa-eye"></i>
+            <span>Review Answers</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

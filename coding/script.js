@@ -1,0 +1,613 @@
+// Enhanced Quiz Data with more questions and categories
+const quizData = [
+  {
+    id: 1,
+    category: "ISO",
+    question: "What does ISO control in photography?",
+    answers: ["Color", "Shutter speed", "Sensitivity to light", "Focus"],
+    correct: 2,
+    hint: "ISO controls the sensitivity of your camera sensor to light. Higher ISO values make the sensor more sensitive but can introduce noise.",
+    explanation: "ISO (International Organization for Standardization) measures the sensitivity of your camera's sensor to light. Higher ISO values (like 800, 1600) make the sensor more sensitive, allowing you to shoot in darker conditions, but can introduce digital noise or grain."
+  },
+  {
+    id: 2,
+    category: "Shutter Speed",
+    question: "Is this photo taken with a fast or slow shutter speed?",
+    image: "images/q2.jpg",
+    answers: ["Fast", "Slow"],
+    correct: 0,
+    hint: "Fast shutter speeds freeze motion, making moving subjects appear still and sharp.",
+    explanation: "This photo shows a frozen moment with sharp details, indicating a fast shutter speed was used. Fast shutter speeds (like 1/500s or faster) freeze motion and are great for sports, wildlife, or any fast-moving subjects."
+  },
+  {
+    id: 3,
+    category: "General",
+    question: "Which setting affects depth of field?",
+    answers: ["ISO", "Shutter speed", "Aperture", "White balance"],
+    correct: 2,
+    hint: "Aperture controls how much of your image is in focus from front to back (depth of field).",
+    explanation: "Aperture (f-stop) controls the depth of field - how much of your image is in focus from front to back. Wide apertures (low f-numbers like f/1.4) create shallow depth of field with blurred backgrounds, while narrow apertures (high f-numbers like f/16) create deep depth of field with more of the scene in focus."
+  },
+  {
+    id: 4,
+    category: "Shutter Speed",
+    question: "Is this photo taken with a fast or slow shutter speed?",
+    image: "images/q4.jpg",
+    answers: ["Fast", "Slow"],
+    correct: 1,
+    hint: "Slow shutter speeds create motion blur, making moving subjects appear streaked or blurred.",
+    explanation: "This photo shows motion blur, indicating a slow shutter speed was used. Slow shutter speeds (like 1/30s or slower) allow more light in and can create artistic effects like motion blur, light trails, or silky water effects."
+  },
+  {
+    id: 5,
+    category: "Exposure Triangle",
+    question: "What is the relationship between ISO, aperture, and shutter speed?",
+    answers: ["They are independent settings", "They work together to control exposure", "Only two affect exposure", "They only matter in manual mode"],
+    correct: 1,
+    hint: "These three settings work together to control how much light reaches the sensor, affecting the overall exposure of your image.",
+    explanation: "ISO, aperture, and shutter speed form the 'exposure triangle' - they work together to control how much light reaches your camera's sensor. Changing one affects the others, and understanding their relationship is key to manual photography."
+  },
+  {
+    id: 6,
+    category: "Aperture",
+    question: "Which f-stop would give you the shallowest depth of field?",
+    answers: ["f/22", "f/8", "f/2.8", "f/16"],
+    correct: 2,
+    hint: "Lower f-numbers (wider apertures) create shallower depth of field with more background blur.",
+    explanation: "f/2.8 is the widest aperture listed, which creates the shallowest depth of field. The lower the f-number, the wider the aperture and the more background blur you'll get."
+  }
+];
+
+// Quiz State Management
+class QuizManager {
+  constructor() {
+    this.currentQuestion = 0;
+    this.score = 0;
+    this.hintShown = false;
+    this.timeLeft = 30;
+    this.timer = null;
+    this.startTime = null;
+    this.totalTime = 0;
+    this.answers = [];
+    this.highScore = this.loadHighScore();
+    
+    this.initializeElements();
+    this.bindEvents();
+    this.showWelcomeScreen();
+  }
+
+  initializeElements() {
+    this.elements = {
+      welcomeScreen: document.getElementById('welcome-screen'),
+      quizContainer: document.getElementById('quiz-container'),
+      resultsScreen: document.getElementById('results-screen'),
+      questionContainer: document.getElementById('question-container'),
+      nextButton: document.getElementById('next-button'),
+      hintButton: document.getElementById('hint-button'),
+      hintLogo: document.getElementById('hint-logo'),
+      progressFill: document.getElementById('progress-fill'),
+      currentQuestion: document.getElementById('current-question'),
+      totalQuestions: document.getElementById('total-questions'),
+      timer: document.getElementById('timer'),
+      timeLeft: document.getElementById('time-left'),
+      currentScore: document.getElementById('current-score'),
+      highScore: document.getElementById('high-score'),
+      startQuiz: document.getElementById('start-quiz'),
+      restartQuiz: document.getElementById('restart-quiz'),
+      reviewAnswers: document.getElementById('review-answers'),
+      finalScore: document.getElementById('final-score'),
+      scorePercentage: document.getElementById('score-percentage'),
+      correctAnswers: document.getElementById('correct-answers'),
+      incorrectAnswers: document.getElementById('incorrect-answers'),
+      totalTime: document.getElementById('total-time'),
+      feedbackMessage: document.getElementById('feedback-message')
+    };
+
+    // Update high score display
+    this.elements.highScore.textContent = this.highScore;
+  }
+
+  bindEvents() {
+    this.elements.startQuiz.addEventListener('click', () => this.startQuiz());
+    this.elements.restartQuiz.addEventListener('click', () => this.restartQuiz());
+    this.elements.reviewAnswers.addEventListener('click', () => this.reviewAnswers());
+    this.elements.nextButton.addEventListener('click', () => this.nextQuestion());
+    this.elements.hintButton.addEventListener('click', () => this.toggleHint());
+    this.elements.hintLogo.addEventListener('click', () => this.toggleHint());
+  }
+
+  showWelcomeScreen() {
+    this.elements.welcomeScreen.style.display = 'flex';
+    this.elements.quizContainer.style.display = 'none';
+    this.elements.resultsScreen.style.display = 'none';
+  }
+
+  startQuiz() {
+    this.elements.welcomeScreen.style.display = 'none';
+    this.elements.quizContainer.style.display = 'block';
+    this.elements.resultsScreen.style.display = 'none';
+    
+    this.resetQuiz();
+    this.showQuestion();
+    this.startTimer();
+  }
+
+  resetQuiz() {
+    this.currentQuestion = 0;
+    this.score = 0;
+    this.hintShown = false;
+    this.timeLeft = 30;
+    this.answers = [];
+    this.startTime = Date.now();
+    this.updateScore();
+    this.updateProgress();
+  }
+
+  showQuestion() {
+    const q = quizData[this.currentQuestion];
+    this.elements.questionContainer.innerHTML = '';
+
+    // Question text
+    const questionText = document.createElement('div');
+    questionText.className = 'question-text';
+    questionText.innerHTML = `
+      <div class="question-category">${q.category}</div>
+      <div class="question-main">${q.question}</div>
+    `;
+    this.elements.questionContainer.appendChild(questionText);
+
+    // Question image
+    if (q.image) {
+      const img = document.createElement('img');
+      img.src = q.image;
+      img.alt = "Question image";
+      img.className = 'question-image';
+      this.elements.questionContainer.appendChild(img);
+    }
+
+    // Answer buttons
+    const answersDiv = document.createElement('div');
+    answersDiv.className = 'answers';
+
+    q.answers.forEach((answer, index) => {
+      const btn = document.createElement('button');
+      btn.className = 'answer-button';
+      btn.innerHTML = `
+        <span class="answer-text">${answer}</span>
+        <i class="fas fa-check answer-icon correct-icon" style="display: none;"></i>
+        <i class="fas fa-times answer-icon incorrect-icon" style="display: none;"></i>
+      `;
+      btn.onclick = () => this.handleAnswer(index);
+      answersDiv.appendChild(btn);
+    });
+
+    this.elements.questionContainer.appendChild(answersDiv);
+
+    // Create hint div (now after answers)
+    if (q.hint) {
+      const hintDiv = document.createElement('div');
+      hintDiv.id = 'hint';
+      hintDiv.style.display = 'none';
+      hintDiv.innerHTML = `
+        <i class="fas fa-lightbulb"></i>
+        <span>${q.hint}</span>
+      `;
+      this.elements.questionContainer.appendChild(hintDiv);
+      this.elements.hintButton.style.display = 'flex';
+    } else {
+      this.elements.hintButton.style.display = 'none';
+    }
+
+    // Reset hint state
+    this.hintShown = false;
+    this.elements.hintLogo.style.display = 'none';
+    this.elements.nextButton.style.display = 'none';
+  }
+
+  handleAnswer(selectedIndex) {
+    const q = quizData[this.currentQuestion];
+    const buttons = document.querySelectorAll('.answer-button');
+    
+    // Stop timer
+    this.stopTimer();
+    
+    // Disable all buttons
+    buttons.forEach(btn => btn.disabled = true);
+    
+    // Show correct/incorrect indicators
+    buttons.forEach((btn, index) => {
+      const correctIcon = btn.querySelector('.correct-icon');
+      const incorrectIcon = btn.querySelector('.incorrect-icon');
+      
+      if (index === q.correct) {
+        btn.classList.add('correct');
+        correctIcon.style.display = 'inline-block';
+      } else if (index === selectedIndex) {
+        btn.classList.add('incorrect');
+        incorrectIcon.style.display = 'inline-block';
+      }
+    });
+
+    // Update score
+    if (selectedIndex === q.correct) {
+      this.score++;
+      this.updateScore();
+    }
+
+    // Store answer for review
+    this.answers.push({
+      question: q,
+      selected: selectedIndex,
+      correct: selectedIndex === q.correct,
+      timeSpent: 30 - this.timeLeft
+    });
+
+    // Show next button
+    this.elements.nextButton.style.display = 'flex';
+  }
+
+  nextQuestion() {
+    this.currentQuestion++;
+    this.elements.nextButton.style.display = 'none';
+    
+    if (this.currentQuestion < quizData.length) {
+      this.timeLeft = 30;
+      this.hintShown = false;
+      this.showQuestion();
+      this.startTimer();
+    } else {
+      this.finishQuiz();
+    }
+  }
+
+  startTimer() {
+    this.timeLeft = 30;
+    this.updateTimer();
+    
+    this.timer = setInterval(() => {
+      this.timeLeft--;
+      this.updateTimer();
+      
+      if (this.timeLeft <= 0) {
+        this.stopTimer();
+        this.handleTimeUp();
+      }
+    }, 1000);
+  }
+
+  stopTimer() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+  }
+
+  updateTimer() {
+    this.elements.timeLeft.textContent = this.timeLeft;
+    
+    // Update timer styling based on time left
+    this.elements.timer.className = 'timer';
+    if (this.timeLeft <= 10) {
+      this.elements.timer.classList.add('danger');
+    } else if (this.timeLeft <= 20) {
+      this.elements.timer.classList.add('warning');
+    }
+  }
+
+  handleTimeUp() {
+    const buttons = document.querySelectorAll('.answer-button');
+    const q = quizData[this.currentQuestion];
+    
+    // Disable all buttons
+    buttons.forEach(btn => btn.disabled = true);
+    
+    // Show correct answer
+    buttons.forEach((btn, index) => {
+      const correctIcon = btn.querySelector('.correct-icon');
+      if (index === q.correct) {
+        btn.classList.add('correct');
+        correctIcon.style.display = 'inline-block';
+      }
+    });
+
+    // Store answer as incorrect
+    this.answers.push({
+      question: q,
+      selected: -1,
+      correct: false,
+      timeSpent: 30
+    });
+
+    // Show next button
+    this.elements.nextButton.style.display = 'flex';
+  }
+
+  finishQuiz() {
+    this.totalTime = Math.round((Date.now() - this.startTime) / 1000);
+    this.stopTimer();
+    
+    // Calculate final score
+    const percentage = Math.round((this.score / quizData.length) * 100);
+    const incorrect = quizData.length - this.score;
+    
+    // Update high score if needed
+    if (this.score > this.highScore) {
+      this.highScore = this.score;
+      this.saveHighScore();
+    }
+    
+    // Update results screen
+    this.elements.finalScore.textContent = this.score;
+    this.elements.scorePercentage.textContent = `${percentage}%`;
+    this.elements.correctAnswers.textContent = this.score;
+    this.elements.incorrectAnswers.textContent = incorrect;
+    this.elements.totalTime.textContent = `${this.totalTime}s`;
+    
+    // Set feedback message
+    this.setFeedbackMessage(percentage);
+    
+    // Show results screen
+    this.elements.quizContainer.style.display = 'none';
+    this.elements.resultsScreen.style.display = 'flex';
+  }
+
+  setFeedbackMessage(percentage) {
+    let message = '';
+    let icon = '';
+    
+    if (percentage === 100) {
+      message = "Perfect! You're a photography master! 🏆";
+      icon = "fas fa-crown";
+    } else if (percentage >= 80) {
+      message = "Excellent work! You have a great understanding of the exposure triangle! 🌟";
+      icon = "fas fa-star";
+    } else if (percentage >= 60) {
+      message = "Good job! You're on the right track with your photography knowledge! 👍";
+      icon = "fas fa-thumbs-up";
+    } else if (percentage >= 40) {
+      message = "Not bad! Keep practicing and you'll improve your photography skills! 📚";
+      icon = "fas fa-book";
+    } else {
+      message = "Keep learning! The exposure triangle takes time to master. Don't give up! 💪";
+      icon = "fas fa-heart";
+    }
+    
+    this.elements.feedbackMessage.innerHTML = `
+      <i class="${icon}"></i>
+      <span>${message}</span>
+    `;
+  }
+
+  restartQuiz() {
+    this.showWelcomeScreen();
+  }
+
+  reviewAnswers() {
+    // Create review modal or navigate to review page
+    this.showReviewModal();
+  }
+
+  showReviewModal() {
+    const modal = document.createElement('div');
+    modal.className = 'review-modal';
+    modal.innerHTML = `
+      <div class="review-content">
+        <div class="review-header">
+          <h3>Answer Review</h3>
+          <button class="close-review">&times;</button>
+        </div>
+        <div class="review-answers">
+          ${this.answers.map((answer, index) => `
+            <div class="review-item ${answer.correct ? 'correct' : 'incorrect'}">
+              <div class="review-question">
+                <strong>Question ${index + 1}:</strong> ${answer.question.question}
+              </div>
+              <div class="review-details">
+                <span>Your answer: ${answer.selected >= 0 ? answer.question.answers[answer.selected] : 'Time ran out'}</span>
+                <span>Correct answer: ${answer.question.answers[answer.question.correct]}</span>
+                <span>Time spent: ${answer.timeSpent}s</span>
+              </div>
+              <div class="review-explanation">
+                <strong>Explanation:</strong> ${answer.question.explanation}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Close modal functionality
+    modal.querySelector('.close-review').onclick = () => {
+      document.body.removeChild(modal);
+    };
+    
+    modal.onclick = (e) => {
+      if (e.target === modal) {
+        document.body.removeChild(modal);
+      }
+    };
+  }
+
+  toggleHint() {
+    const hintDiv = document.getElementById('hint');
+    if (hintDiv) {
+      this.hintShown = !this.hintShown;
+      hintDiv.style.display = this.hintShown ? 'block' : 'none';
+    }
+  }
+
+  updateScore() {
+    this.elements.currentScore.textContent = this.score;
+  }
+
+  updateProgress() {
+    const progress = ((this.currentQuestion + 1) / quizData.length) * 100;
+    this.elements.progressFill.style.width = `${progress}%`;
+    this.elements.currentQuestion.textContent = this.currentQuestion + 1;
+    this.elements.totalQuestions.textContent = quizData.length;
+  }
+
+  loadHighScore() {
+    return parseInt(localStorage.getItem('photography-quiz-high-score')) || 0;
+  }
+
+  saveHighScore() {
+    localStorage.setItem('photography-quiz-high-score', this.highScore.toString());
+    this.elements.highScore.textContent = this.highScore;
+  }
+}
+
+// Add CSS for review modal
+const reviewModalCSS = `
+  .review-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    padding: 1rem;
+  }
+  
+  .review-content {
+    background: white;
+    border-radius: 20px;
+    max-width: 800px;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+  
+  .review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #e2e8f0;
+    position: sticky;
+    top: 0;
+    background: white;
+    border-radius: 20px 20px 0 0;
+  }
+  
+  .review-header h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+  }
+  
+  .close-review {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #718096;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+  }
+  
+  .close-review:hover {
+    background: #f7fafc;
+    color: #2d3748;
+  }
+  
+  .review-answers {
+    padding: 2rem;
+  }
+  
+  .review-item {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border-left: 4px solid;
+  }
+  
+  .review-item.correct {
+    background: #f0fff4;
+    border-left-color: #48bb78;
+  }
+  
+  .review-item.incorrect {
+    background: #fed7d7;
+    border-left-color: #f56565;
+  }
+  
+  .review-question {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 1rem;
+  }
+  
+  .review-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: #4a5568;
+  }
+  
+  .review-explanation {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #2d3748;
+    line-height: 1.6;
+  }
+  
+  .question-category {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+  
+  .question-main {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2d3748;
+    line-height: 1.4;
+  }
+  
+  .answer-icon {
+    margin-left: 0.5rem;
+    font-size: 1.1rem;
+  }
+  
+  .correct-icon {
+    color: #48bb78;
+  }
+  
+  .incorrect-icon {
+    color: #f56565;
+  }
+`;
+
+// Inject CSS
+const style = document.createElement('style');
+style.textContent = reviewModalCSS;
+document.head.appendChild(style);
+
+// Initialize quiz when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  new QuizManager();
+});
