@@ -6,7 +6,7 @@ const quizData = [
     question: "What does ISO control in photography?",
     answers: ["Color", "Shutter speed", "Sensitivity to light", "Focus"],
     correct: 2,
-    hint: "ISO controls the sensitivity of your camera sensor to light. Higher ISO values make the sensor more sensitive but can introduce noise.",
+    hint: "Higher ISO produce noise",
     explanation: "ISO (International Organization for Standardization) measures the sensitivity of your camera's sensor to light. Higher ISO values (like 800, 1600) make the sensor more sensitive, allowing you to shoot in darker conditions, but can introduce digital noise or grain."
   },
   {
@@ -16,7 +16,7 @@ const quizData = [
     image: "images/q2.jpg",
     answers: ["Fast", "Slow"],
     correct: 0,
-    hint: "Fast shutter speeds freeze motion, making moving subjects appear still and sharp.",
+    hint: "Sport",
     explanation: "This photo shows a frozen moment with sharp details, indicating a fast shutter speed was used. Fast shutter speeds (like 1/500s or faster) freeze motion and are great for sports, wildlife, or any fast-moving subjects."
   },
   {
@@ -25,7 +25,7 @@ const quizData = [
     question: "Which setting affects depth of field?",
     answers: ["ISO", "Shutter speed", "Aperture", "White balance"],
     correct: 2,
-    hint: "Aperture controls how much of your image is in focus from front to back (depth of field).",
+    hint: "Ring like structure in lens",
     explanation: "Aperture (f-stop) controls the depth of field - how much of your image is in focus from front to back. Wide apertures (low f-numbers like f/1.4) create shallow depth of field with blurred backgrounds, while narrow apertures (high f-numbers like f/16) create deep depth of field with more of the scene in focus."
   },
   {
@@ -35,25 +35,25 @@ const quizData = [
     image: "images/q4.jpg",
     answers: ["Fast", "Slow"],
     correct: 1,
-    hint: "Slow shutter speeds create motion blur, making moving subjects appear streaked or blurred.",
-    explanation: "This photo shows motion blur, indicating a slow shutter speed was used. Slow shutter speeds (like 1/30s or slower) allow more light in and can create artistic effects like motion blur, light trails, or silky water effects."
+    hint: "Night time",
+    explanation: "It was an outdoor shoot at night, with poor light conditions so a slow shutter speed was used to allow more light to hit the sensor. Since the subject is still, the slow shutter speed captures more light without motion blur."
   },
   {
     id: 5,
-    category: "Exposure Triangle",
+    category: "General",
     question: "What is the relationship between ISO, aperture, and shutter speed?",
     answers: ["They are independent settings", "They work together to control exposure", "Only two affect exposure", "They only matter in manual mode"],
     correct: 1,
-    hint: "These three settings work together to control how much light reaches the sensor, affecting the overall exposure of your image.",
+    hint: "3 basic principles of photography",
     explanation: "ISO, aperture, and shutter speed form the 'exposure triangle' - they work together to control how much light reaches your camera's sensor. Changing one affects the others, and understanding their relationship is key to manual photography."
   },
   {
     id: 6,
     category: "Aperture",
-    question: "Which f-stop would give you the shallowest depth of field?",
+    question: "Which f-stop would give you the bokeh effect?",
     answers: ["f/22", "f/8", "f/2.8", "f/16"],
     correct: 2,
-    hint: "Lower f-numbers (wider apertures) create shallower depth of field with more background blur.",
+    hint: "Bokeh means blurred background",
     explanation: "f/2.8 is the widest aperture listed, which creates the shallowest depth of field. The lower the f-number, the wider the aperture and the more background blur you'll get."
   }
 ];
