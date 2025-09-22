@@ -32,7 +32,7 @@ const quizData = [
     id: 4,
     category: "Shutter Speed",
     question: "Is this photo taken with a fast or slow shutter speed?",
-    image: "images/q4.jpg",
+    image: "images/q4.JPG",
     answers: ["Fast", "Slow"],
     correct: 1,
     hint: "Night time",
