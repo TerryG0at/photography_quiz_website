@@ -493,6 +493,27 @@ body {
   filter: blur(1.2px) drop-shadow(0 0 6px var(--neon)) drop-shadow(0 0 6px var(--sun));
 }
 
+/* Improve question visibility in neon theme */
+.question-text,
+.question-main {
+  color: #fffdf2; /* off-white for better contrast */
+  text-shadow:
+    0 0 6px #30e7ff,
+    0 0 12px #ffb347,
+    0 0 20px rgba(0, 245, 255, 0.6);
+}
+
+/* Category pill stays vivid but with lighter text */
+.question-category {
+  color: #fff;
+  background: linear-gradient(90deg, #30e7ff, #ffb347);
+  border: none;
+  box-shadow:
+    0 0 8px rgba(0, 245, 255, 0.6),
+    0 0 8px rgba(255, 179, 71, 0.5);
+}
+
+
 /* Animations */
 @keyframes fadeIn { from{opacity:0} to{opacity:1} }
 @keyframes scorePulse { 0%,100%{ transform:scale(1)} 50%{ transform:scale(1.06)} }
