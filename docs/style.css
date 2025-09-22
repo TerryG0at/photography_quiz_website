@@ -109,12 +109,19 @@ body {
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
 }
 .timer.warning {
-  color: #ffd76b; border-color: #ffce4a;
-  box-shadow: 0 0 8px #ffce4a;
+  color: #d69e2e;
+  border-color: #f6e05e;
+  background: #fef5e7;
+  box-shadow: 0 0 4px #f6e05e; /* softer glow */
+  animation: pulse 1.5s infinite; /* slower, less distracting */
 }
+
 .timer.danger {
-  color: #ff8a8f; border-color: #ff5f6d;
-  box-shadow: 0 0 10px #ff5f6d;
+  color: #e53e3e;
+  border-color: #fc8181;
+  background: #fed7d7;
+  box-shadow: 0 0 5px #fc8181; /* softer glow */
+  animation: pulse 1.2s infinite;
 }
 
 /* Main Card */
@@ -142,9 +149,16 @@ body {
 
 /* Question */
 .question-text {
-  font-size: 1.6rem; font-weight: 800; color: var(--ink);
-  margin-bottom: 1.2rem; line-height: 1.35; text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #f5f5f5; /* was #2d3748 */
+  margin-bottom: 2rem;
+  line-height: 1.4;
+  text-align: center;
+  flex-shrink: 0;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.2);
 }
+
 .question-category {
   display:inline-block; margin-bottom: .8rem; font-size:.8rem; font-weight:700;
   color:#001319; background: color-mix(in oklab, var(--neon) 25%, transparent);
@@ -438,18 +452,19 @@ body {
 }
 
 /* Score ring: radial cyan core → amber rim */
-.score-circle{
-  background: radial-gradient(130px 130px at 50% 45%,
-    var(--neon) 0%,
-    #8bf6ff 45%,
-    var(--sun) 85%,
-    #2a1600 86%);
-  color: #041015;
-  border: 1px solid color-mix(in oklab, var(--sun) 60%, transparent);
-  box-shadow:
-    0 14px 35px rgba(0,0,0,.45),
-    0 0 10px color-mix(in oklab, var(--neon) 60%, transparent),
-    0 0 14px color-mix(in oklab, var(--sun) 55%, transparent);
+.score-circle {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.25); /* softer shadow */
+  animation: scorePulse 3s infinite; /* slower pulse */
 }
 
 /* Answer buttons: cool-neutral base, stronger dual glow on hover/focus */
@@ -513,6 +528,97 @@ body {
     0 0 8px rgba(255, 179, 71, 0.5);
 }
 
+/* ===== Improve results denominator + soften question text ===== */
+
+/* Results Final Score number */
+.final-score {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #ffb347; /* neon orange/yellow */
+  text-shadow: 0 0 10px rgba(255, 179, 71, 0.7);
+  margin-bottom: 0.5rem;
+}
+
+/* The “/ 6” label */
+.score-label {
+  font-size: 1.5rem;
+  color: #ffda79; /* bright yellow */
+  text-shadow: 0 0 8px rgba(255, 218, 121, 0.6);
+}
+
+/* Soften the QUESTION text to an off-white with minimal glow */
+.question-text,
+.question-main{
+  color: #f2f5ff;            /* light grey-white for readability */
+  text-shadow: 0 1px 0 rgba(0,0,0,.35);  /* remove heavy neon halo */
+}
+
+/* If you still want a hint of warmth on the question category chip */
+.question-category{ color:#001319; }
+
+/* Percentage below the score */
+.score-percentage {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #30e7ff; /* cyan neon like trophy */
+  text-shadow: 0 0 10px rgba(48, 231, 255, 0.8);
+}
+
+/* --- Force numerator to match the total (amber) --- */
+/* In your markup, the number is inside #final-score within .final-score */
+.results-content .final-score,
+.results-content .final-score #final-score {
+  color: var(--sun) !important;  /* amber/yellow neon */
+  text-shadow:
+    0 0 8px color-mix(in oklab, var(--sun) 65%, transparent),
+    0 0 14px color-mix(in oklab, var(--sun) 45%, transparent);
+}
+
+/* Keep the denominator the same warm tone */
+.results-content .score-label {
+  color: var(--sun) !important;
+  text-shadow:
+    0 0 8px color-mix(in oklab, var(--sun) 60%, transparent);
+}
+
+/* Percentage: cyan to match the trophy */
+.results-content .score-percentage {
+  color: var(--neon) !important;
+  text-shadow:
+    0 0 10px color-mix(in oklab, var(--neon) 60%, transparent);
+}
+
+/* ===== Results colors (clean, unified) ===== */
+
+/* 1) Numerator & denominator = warm neon (amber) */
+.results-content .final-score,
+.results-content .final-score #final-score,
+.results-content .final-score .score-label,
+.results-content .final-score #score-label,
+.results-content .final-score #total-questions {
+  color: var(--sun) !important;
+  text-shadow:
+    0 0 6px color-mix(in oklab, var(--sun) 65%, transparent),
+    0 0 12px color-mix(in oklab, var(--sun) 45%, transparent);
+  /* extra punch for neon glow */
+  filter: drop-shadow(0 0 6px color-mix(in oklab, var(--sun) 55%, transparent));
+}
+
+/* 2) Percentage = cyan to match the trophy */
+.results-content .score-percentage {
+  color: var(--neon) !important;
+  text-shadow:
+    0 0 8px color-mix(in oklab, var(--neon) 60%, transparent),
+    0 0 14px color-mix(in oklab, var(--neon) 45%, transparent);
+  filter: drop-shadow(0 0 6px color-mix(in oklab, var(--neon) 55%, transparent));
+}
+
+/* 3) Question text = soft white (no heavy halo) */
+.question-text,
+.question-main {
+  color: #f2f5ff !important;
+  text-shadow: 0 1px 0 rgba(0,0,0,.35);
+}
 
 /* Animations */
 @keyframes fadeIn { from{opacity:0} to{opacity:1} }
