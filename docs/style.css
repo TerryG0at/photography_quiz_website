@@ -377,6 +377,122 @@ body {
 }
 .review-explanation{ background: rgba(255,255,255,0.04); border-radius:10px; padding:.8rem; }
 
+/* === Cyan × Amber Neon Add-On (paste at end of style.css) === */
+:root{
+  /* keep the cyan you liked */
+  --neon:   #30e7ff;   /* cyan */
+  /* add warm neon tones */
+  --sun:    #ffc83d;   /* amber */
+  --sun-2:  #ff7a00;   /* orange */
+  --shadow-sun: 0 0 8px var(--sun), 0 0 16px color-mix(in oklab, var(--sun) 60%, transparent);
+}
+
+/* Progress bar: cyan → amber blend */
+.progress-fill{
+  background: linear-gradient(90deg, var(--neon) 0%, #7df1ff 35%, var(--sun) 100%);
+  box-shadow:
+    0 0 8px color-mix(in oklab, var(--neon) 70%, transparent),
+    0 0 12px color-mix(in oklab, var(--sun) 55%, transparent);
+}
+
+/* Primary CTA (Next, Start, Restart): cyan → amber */
+.next-btn,
+.start-btn,
+.restart-btn{
+  background: linear-gradient(90deg, var(--neon) 0%, #7df1ff 30%, var(--sun) 100%);
+  color: #031016;
+  box-shadow:
+    0 6px 22px rgba(0, 245, 255, 0.25),
+    0 0 14px color-mix(in oklab, var(--sun) 60%, transparent);
+}
+.next-btn:hover,
+.start-btn:hover,
+.restart-btn:hover{
+  filter: brightness(1.06);
+  transform: translateY(-2px);
+}
+
+/* Secondary CTA (Hint): orange glow */
+.hint-btn{
+  background: linear-gradient(90deg, var(--sun-2) 0%, var(--sun) 100%);
+  color: #1a0c00;
+  box-shadow:
+    0 6px 22px rgba(255, 122, 0, .35),
+    0 0 12px color-mix(in oklab, var(--sun) 60%, transparent);
+}
+.hint-btn:focus-visible{
+  box-shadow:
+    0 0 0 3px color-mix(in oklab, var(--sun) 45%, transparent),
+    0 0 12px color-mix(in oklab, var(--sun) 60%, transparent);
+}
+
+/* Category pill: subtle dual-tone */
+.question-category{
+  background: linear-gradient(90deg,
+    color-mix(in oklab, var(--neon) 18%, transparent) 0%,
+    color-mix(in oklab, var(--sun) 18%, transparent) 100%);
+  border-color: color-mix(in oklab, var(--neon) 40%, var(--sun) 40%);
+  box-shadow:
+    0 0 10px color-mix(in oklab, var(--neon) 35%, transparent),
+    0 0 10px color-mix(in oklab, var(--sun) 30%, transparent);
+}
+
+/* Score ring: radial cyan core → amber rim */
+.score-circle{
+  background: radial-gradient(130px 130px at 50% 45%,
+    var(--neon) 0%,
+    #8bf6ff 45%,
+    var(--sun) 85%,
+    #2a1600 86%);
+  color: #041015;
+  border: 1px solid color-mix(in oklab, var(--sun) 60%, transparent);
+  box-shadow:
+    0 14px 35px rgba(0,0,0,.45),
+    0 0 10px color-mix(in oklab, var(--neon) 60%, transparent),
+    0 0 14px color-mix(in oklab, var(--sun) 55%, transparent);
+}
+
+/* Answer buttons: cool-neutral base, stronger dual glow on hover/focus */
+.answer-button{
+  /* base stays from neon theme; we just enhance the glow states */
+}
+.answer-button:hover{
+  border-color: color-mix(in oklab, var(--neon) 28%, var(--sun) 28%);
+  box-shadow:
+    0 10px 26px rgba(0,0,0,.35),
+    0 0 10px color-mix(in oklab, var(--neon) 28%, transparent),
+    0 0 10px color-mix(in oklab, var(--sun) 24%, transparent);
+}
+.answer-button:focus-visible{
+  box-shadow:
+    0 0 0 3px color-mix(in oklab, var(--neon) 35%, transparent),
+    0 0 0 6px color-mix(in oklab, var(--sun) 28%, transparent),
+    0 0 14px color-mix(in oklab, var(--neon) 40%, transparent),
+    0 0 14px color-mix(in oklab, var(--sun) 35%, transparent);
+  border-color: color-mix(in oklab, var(--neon) 40%, var(--sun) 40%);
+}
+
+/* Info/feedback blocks: cyan edge + amber inner glow for readability */
+.feedback-message{
+  border-left-color: var(--neon);
+  box-shadow:
+    0 10px 26px rgba(0,0,0,.35),
+    0 0 10px color-mix(in oklab, var(--neon) 35%, transparent),
+    0 0 8px color-mix(in oklab, var(--sun) 30%, transparent);
+}
+
+/* Results detail icons: keep success/error, accent stopwatch in dual-tone */
+.detail-item i.fa-stopwatch{
+  color: var(--neon);
+  filter: drop-shadow(0 0 6px var(--neon)) drop-shadow(0 0 6px var(--sun));
+}
+
+/* Thin top strip on main card: dual gradient instead of cyan+magenta */
+.quiz-container::after{
+  background: linear-gradient(90deg, var(--neon), var(--sun));
+  filter: blur(1.2px) drop-shadow(0 0 6px var(--neon)) drop-shadow(0 0 6px var(--sun));
+}
+
 /* Animations */
 @keyframes fadeIn { from{opacity:0} to{opacity:1} }
 @keyframes scorePulse { 0%,100%{ transform:scale(1)} 50%{ transform:scale(1.06)} }
