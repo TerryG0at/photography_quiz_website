@@ -307,6 +307,15 @@ body {
 .welcome-content h2, .results-header h2{ color: var(--ink); font-weight: 800; }
 .welcome-content p { color: var(--muted); }
 
+/* Welcome Heading (neon orange glow) */
+.welcome-content h2 {
+  color: #ffb347; /* neon orange/yellow */
+  text-shadow:
+    0 0 6px rgba(255, 179, 71, 0.8),
+    0 0 12px rgba(255, 140, 0, 0.6),
+    0 0 20px rgba(255, 179, 71, 0.6);
+}
+
 .quiz-stats{
   display:grid; gap: .9rem; grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
   margin: 1.2rem 0 1.6rem;
