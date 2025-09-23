@@ -369,7 +369,7 @@ body {
 
 /* Review modal (injected by JS) — kept from your logic, re-skinned */
 .review-modal {
-  position: fixed; inset:0; background: rgba(0,0,0,0.7);
+  position: fixed; inset:0; background: rgba(0,0,0,0.9);
   display:flex; align-items:center; justify-content:center; z-index:3000; padding:1rem;
 }
 .review-content{
@@ -476,10 +476,6 @@ body {
   animation: scorePulse 3s infinite; /* slower pulse */
 }
 
-/* Answer buttons: cool-neutral base, stronger dual glow on hover/focus */
-.answer-button{
-  /* base stays from neon theme; we just enhance the glow states */
-}
 .answer-button:hover{
   border-color: color-mix(in oklab, var(--neon) 28%, var(--sun) 28%);
   box-shadow:
@@ -627,6 +623,19 @@ body {
 .question-main {
   color: #f2f5ff !important;
   text-shadow: 0 1px 0 rgba(0,0,0,.35);
+}
+
+.results-content {
+  align-items: center;
+}
+
+.results-content .restart-btn,
+.results-content .review-btn {
+  margin-top: 2rem;   /* push them below feedback box */
+}
+
+.results-content .restart-btn + .review-btn {
+  margin-left: 1rem;  /* add horizontal space between buttons */
 }
 
 /* Animations */
