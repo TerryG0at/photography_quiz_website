@@ -55,6 +55,16 @@ const quizData = [
     correct: 2,
     hint: "Bokeh means blurred background",
     explanation: "f/2.8 is the widest aperture listed, which creates the shallowest depth of field. The lower the f-number, the wider the aperture and the more background blur you'll get."
+  },
+
+  {
+    id: 7,
+    category: "General",
+    question: "Which setting control the exposure of image?",
+    answers: ["All 3", "ISO", "Shutter speed", "Aperture"],
+    correct: 0,
+    hint: "Exposure triangle",
+    explanation: "ISO controls the sensitivity of the camera sensor to light. Shutter speed controls how long the sensor is exposed to light. Aperture controls how much light enters through the lens. All three settings work together to determine the overall exposure of an image."
   }
 ];
 
