@@ -678,6 +678,26 @@ body {
   opacity: .95;
 }
 
+/* --- click feedback ring --- */
+.click-pulse {
+  position: fixed;
+  width: var(--cursor-size);
+  height: var(--cursor-size);
+  border: var(--cursor-border) solid var(--cursor-color);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%) scale(0.6);
+  opacity: 0.9;
+  filter: drop-shadow(0 0 3px rgba(255,59,48,.55));
+  animation: cursorPulse 380ms ease-out forwards; /* tweak duration here */
+}
+
+@keyframes cursorPulse {
+  0%   { transform: translate(-50%, -50%) scale(0.6); opacity: 0.9; }
+  100% { transform: translate(-50%, -50%) scale(1.7); opacity: 0; }
+}
+
 /* Accessibility: respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
   html, body { cursor: auto; }

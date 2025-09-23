@@ -543,6 +543,20 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(tick);
   }
 
+  function spawnPulse(x, y) {
+  const el = document.createElement('div');
+  el.className = 'click-pulse';
+  el.style.left = x + 'px';
+  el.style.top  = y + 'px';
+  document.body.appendChild(el);
+  el.addEventListener('animationend', () => el.remove());
+}
+
+// show pulse at the click location
+window.addEventListener('pointerdown', (e) => {
+  spawnPulse(e.clientX, e.clientY);
+}, { passive: true });
+
   // Start
   requestAnimationFrame(tick);
 })();
