@@ -638,6 +638,52 @@ body {
   margin-left: 1rem;  /* add horizontal space between buttons */
 }
 
+/* === Custom Cursor + Trail === */
+:root {
+  --cursor-color: #ff3b30;       /* red */
+  --cursor-size: 22px;           /* ring diameter */
+  --cursor-border: 2px;          /* ring thickness */
+  --cursor-trail-count: 14;      /* visual only; JS controls actual count */
+}
+
+/* Hide system cursor everywhere inside app */
+.app-container,
+.app-container a,
+.app-container button,
+.app-container input,
+.app-container textarea,
+.app-container select {
+  cursor: none !important;
+}
+
+/* trailing ghosts */
+.cursor-dot {
+  position: fixed;
+  left: 0; top: 0;
+  width: calc(var(--cursor-size) - 8px);
+  height: calc(var(--cursor-size) - 8px);
+  border: 2px solid var(--cursor-color);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%) scale(.85);
+  opacity: .35;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 0 2px rgba(255,59,48,.45));
+}
+
+/* click feedback (optional) */
+.cursor-ring.is-down {
+  transform: translate(-50%, -50%) scale(0.85);
+  opacity: .95;
+}
+
+/* Accessibility: respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html, body { cursor: auto; }
+  .cursor-ring, .cursor-dot { display: none !important; }
+}
+
 /* Animations */
 @keyframes fadeIn { from{opacity:0} to{opacity:1} }
 @keyframes scorePulse { 0%,100%{ transform:scale(1)} 50%{ transform:scale(1.06)} }

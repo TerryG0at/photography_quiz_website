@@ -474,3 +474,75 @@ class QuizManager {
 document.addEventListener('DOMContentLoaded', () => {
   new QuizManager();
 });
+
+/* === Red Trail Cursor (no main ring) === */
+(() => {
+  const ENABLE_CUSTOM_CURSOR = true;
+  if (!ENABLE_CUSTOM_CURSOR || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const DOT_COUNT = 16;        // number of trail "ghosts"
+  const EASE_TAIL = 0.125;      // how fast each dot follows the previous one (0..1)
+  const FADE_STEP = 0.025;     // per-dot extra fade
+  const SCALE_STEP = 0.024;    // per-dot extra scale reduction
+
+  // Create trail dots
+  const dots = Array.from({ length: DOT_COUNT }, () => {
+    const d = document.createElement('div');
+    d.className = 'cursor-dot';
+    document.body.appendChild(d);
+    return d;
+  });
+
+  // Positions store
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+
+  // Each element keeps its own position for nice lag
+  const state = [];
+  for (let i = 0; i < DOT_COUNT; i++) state.push({ x: mouseX, y: mouseY });
+
+  // Events
+  window.addEventListener('pointermove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  }, { passive: true });
+
+  window.addEventListener('pointerleave', () => {
+    dots.forEach(d => d.style.opacity = '0');
+  });
+  window.addEventListener('pointerenter', () => {
+    dots.forEach((d, i) => d.style.opacity = String(0.55 - i * FADE_STEP));
+  });
+
+  // Animation loop
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  function tick() {
+    // first dot follows the mouse directly
+    state[0].x = lerp(state[0].x, mouseX, EASE_TAIL);
+    state[0].y = lerp(state[0].y, mouseY, EASE_TAIL);
+
+    dots[0].style.transform = `translate(${state[0].x}px, ${state[0].y}px) translate(-50%, -50%) scale(0.92)`;
+    dots[0].style.opacity = (0.55).toFixed(3);
+
+    // remaining dots follow the previous dot
+    for (let i = 1; i < state.length; i++) {
+      const prev = state[i - 1];
+      const self = state[i];
+      self.x = lerp(self.x, prev.x, EASE_TAIL);
+      self.y = lerp(self.y, prev.y, EASE_TAIL);
+
+      const s = Math.max(0.55, 0.92 - i * SCALE_STEP);
+      const o = Math.max(0, 0.55 - i * FADE_STEP);
+
+      const dot = dots[i];
+      dot.style.transform = `translate(${self.x}px, ${self.y}px) translate(-50%, -50%) scale(${s})`;
+      dot.style.opacity = o.toFixed(3);
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  // Start
+  requestAnimationFrame(tick);
+})();
