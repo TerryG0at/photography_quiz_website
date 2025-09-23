@@ -646,30 +646,25 @@ body {
   --cursor-trail-count: 14;      /* visual only; JS controls actual count */
 }
 
-/* Hide system cursor everywhere inside app */
-.app-container,
-.app-container a,
-.app-container button,
-.app-container input,
-.app-container textarea,
-.app-container select {
-  cursor: none !important;
-}
+/* Only apply custom cursor on desktop devices */
+@media (hover: hover) and (pointer: fine) {
+  .app-container {
+    cursor: none;
+  }
 
-/* trailing ghosts */
-.cursor-dot {
-  position: fixed;
-  left: 0; top: 0;
-  width: calc(var(--cursor-size) - 8px);
-  height: calc(var(--cursor-size) - 8px);
-  border: 2px solid var(--cursor-color);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9998;
-  transform: translate(-50%, -50%) scale(.85);
-  opacity: .35;
-  will-change: transform, opacity;
-  filter: drop-shadow(0 0 2px rgba(255,59,48,.45));
+  .cursor-dot {
+    position: fixed;
+    left: 0; top: 0;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #ff3b30;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    opacity: 0.4;
+    filter: drop-shadow(0 0 2px rgba(255,59,48,.45));
+  }
 }
 
 /* click feedback (optional) */
